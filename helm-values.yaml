@@ -20,7 +20,6 @@ certificate:
   # use extra names if you want use the webhook via an ingress or a loadbalancer
 
 image:
-  # repository: mirrors--ghcr-io.eu-west-1.artifactory.aws.arm.com/banzaicloud/vault-secrets-webhook
   repository: ghcr.io/bank-vaults/vault-secrets-webhook
   tag: v1.20.0
   pullPolicy: IfNotPresent
@@ -49,13 +48,11 @@ webhookClientConfig:
   # url: https://example.com
 
 vaultEnv:
-  # repository: mirrors--ghcr-io.eu-west-1.artifactory.aws.arm.com/banzaicloud/vault-env
   repository: ghcr.io/bank-vaults/vault-env
   tag: v1.20.1
 
 env:
   VAULT_ENV_PASSTHROUGH: "VAULT_ADDR,VAULT_NAMESPACE,VAULT_PATH,VAULT_ROLE"
-  # VAULT_IMAGE: "mirrors--dockerhub.eu-west-1.artifactory.aws.arm.com/vault:1.12.3"
   VAULT_IMAGE: vault:1.13.2
   # VAULT_CAPATH: /vault/tls
   # # Used when the pod that should get secret injected does not

@@ -1,4 +1,3 @@
-# Copyright: 2022-2023 ARM Ltd. All Rights Reserved.
 variable "location" {
   description = "gke region"
   type        = string

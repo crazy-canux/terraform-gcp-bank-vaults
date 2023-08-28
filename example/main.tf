@@ -4,8 +4,8 @@ locals {
   labels          = data.terraform_remote_state.vpc.outputs.labels
   zones           = data.terraform_remote_state.vpc.outputs.zones
   cluster_name    = data.terraform_remote_state.gke.outputs.name
-  vault_url       = "https://vault.arm.com/"
-  vault_namespace = "iac-phoenix/test"
+  vault_url       = "https://vault.canux.com/"
+  vault_namespace = "myproject/test"
 }
 
 ###############################
@@ -21,7 +21,7 @@ data "google_container_cluster" "this" {
 data "terraform_remote_state" "gke" {
   backend = "gcs"
   config = {
-    bucket = "arm-phoenix-flav-c-tst-iac"
+    bucket = "myproject-tst-iac"
     prefix = "terraform/eu-west-4/gke.tfstate"
   }
 }
@@ -29,18 +29,10 @@ data "terraform_remote_state" "gke" {
 data "terraform_remote_state" "vpc" {
   backend = "gcs"
   config = {
-    bucket = "arm-phoenix-flav-c-tst-iac"
+    bucket = "myproject-tst-iac"
     prefix = "terraform/eu-west-4/vpc.tfstate"
   }
 }
-# enable for TFE
-# data "vault_generic_secret" "gcp_role_config" {
-#   path = "${var.armtfe_vault_gcp_engine_path}/${var.armtfe_vault_gcp_engine_role}"
-# }
-
-# data "vault_generic_secret" "gcp_access_token" {
-#   path = "${var.armtfe_vault_gcp_engine_path}/${var.armtfe_vault_gcp_engine_role}/token"
-# }
 
 ##############################
 # Provider
@@ -49,24 +41,11 @@ provider "vault" {
   address          = local.vault_url
   namespace        = local.vault_namespace
   skip_child_token = true
-  # enable for TFE
-  # auth_login {
-  #   path      = "auth/${var.armtfe_vault_approle_auth_backend}/login"
-  #   namespace = var.armtfe_vault_approle_auth_namespace
-  #   parameters = {
-  #     role_id   = var.armtfe_vault_approle_auth_role_id
-  #     secret_id = var.armtfe_vault_approle_auth_secret_id
-  #   }
-  # }
 }
 
 provider "google" {
   project = local.project
   region  = local.region
-  # enable for TFE
-  # project      = data.vault_generic_secret.gcp_role_config.data["service_account_project"]
-  # access_token = data.vault_generic_secret.gcp_access_token.data["token"]
-  # region       = var.gcp_region
 }
 
 provider "helm" {
@@ -121,7 +100,7 @@ module "secrets_webhook" {
     {
       name = "${local.vault_namespace}/demo"
       hcl  = <<-EOT
-        path "demo/data/*" {
+        path "demo/data/test/*" {
             capabilities = ["read", "list"]
         }
         EOT

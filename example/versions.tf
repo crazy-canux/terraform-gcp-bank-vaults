@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "arm-phoenix-flav-c-tst-iac"
+    bucket = "myproject-tst-iac"
     prefix = "terraform/eu-west-4/vsw.tfstate"
   }
 
